@@ -3,6 +3,7 @@ import morgan from 'morgan';
 import cors from 'cors';
 
 import { incorrectRouteHandler, mainErrorhandler } from './helpers/errors';
+import api from './routes/api';
 
 const app = express();
 
@@ -13,11 +14,7 @@ app.use(express.json());
 app.use(morgan('common'));
 app.use(cors());
 
-app.use((req, res) => {
-  return res.json({
-    message: 'success'
-  });
-});
+app.use('/', api);
 
 /**
  * @description handle errors.
