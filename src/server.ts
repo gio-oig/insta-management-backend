@@ -1,13 +1,16 @@
 import http from 'http';
+import 'dotenv/config.js';
 
 import app from './app';
 
 const server = http.createServer(app);
 
+const PORT = process.env.PORT || 8000;
+
 async function startServer() {
   //   await mongoConnect();
-  server.listen(5000, () => {
-    console.log('server has started on port ' + 5000);
+  server.listen(PORT, () => {
+    console.log('server has started on port ' + PORT);
   });
 }
 
