@@ -50,3 +50,31 @@ export const signinValidation = (
   }
   next();
 };
+
+const createInstaItemValidation = (data: IUser) => {
+  const schema = Joi.object({
+    image: Joi.string().required(),
+    type: Joi.string().valid('user', 'tag').required(),
+    name: Joi.string().required(),
+    mediaCount: Joi.when('type', {
+      is: 'tag',
+      then: Joi.required()
+    })
+  }).options({ abortEarly: false });
+  return schema.validate(data);
+};
+
+export const instaItemValidation = (
+  req: Request,
+  _: Response,
+  next: NextFunction
+) => {
+  const { error } = createInstaItemValidation(req.body);
+  let formatedErrorObj: FormatedInputError = {};
+
+  if (error) {
+    formatedErrorObj = formatError(error);
+    next(new ExtendedError('Invalid properties', 500, formatedErrorObj));
+  }
+  next();
+};
