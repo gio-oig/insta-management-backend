@@ -5,18 +5,26 @@ import bcrypt from 'bcrypt';
 import { ExtendedError } from '../../helpers/errorClass';
 import getToken from '../../helpers/getToken';
 
-const httpSignup = async (req: Request, res: Response) => {
+const httpSignup = async (req: Request, res: Response, next: NextFunction) => {
   const { name, email, password } = req.body;
 
-  const hashedPassword = await hash(password);
+  try {
+    const existingUser = await findByEmail(email);
+    if (existingUser) {
+      throw new ExtendedError('Email is already used');
+    }
 
-  await signup({
-    name,
-    email,
-    password: hashedPassword
-  });
+    const hashedPassword = await hash(password);
 
-  return res.status(200).json({ message: 'user created succesfully' });
+    await signup({
+      name,
+      email,
+      password: hashedPassword
+    });
+    return res.status(200).json({ message: 'user created succesfully' });
+  } catch (error) {
+    next(error);
+  }
 };
 
 const httpSignin = async (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +45,7 @@ const httpSignin = async (req: Request, res: Response, next: NextFunction) => {
       email: user.email
     });
 
-    return res.status(200).json({ message: 'success', data: { token } });
+    return res.status(200).json({ message: 'success', token });
   } catch (error) {
     next(error);
   }
