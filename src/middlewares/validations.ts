@@ -4,11 +4,32 @@ import { ExtendedError } from '../helpers/errorClass';
 import { FormatedInputError, formatError } from '../helpers/formatError';
 import { IUser } from '../models/user.mongo';
 
-export const signupInputValidation = (data: IUser) => {
+const signupInputValidation = (data: IUser) => {
   const schema = Joi.object({
     name: Joi.string().min(3).required(),
     email: Joi.string().required().email(),
     password: Joi.string().min(3).required()
+  }).options({ abortEarly: false });
+  return schema.validate(data);
+};
+
+const signinInputValidation = (data: IUser) => {
+  const schema = Joi.object({
+    email: Joi.string().required().email(),
+    password: Joi.string().required()
+  }).options({ abortEarly: false });
+  return schema.validate(data);
+};
+
+const createInstaItemValidation = (data: IUser) => {
+  const schema = Joi.object({
+    image: Joi.string().required(),
+    type: Joi.string().valid('user', 'tag').required(),
+    name: Joi.string().required(),
+    mediaCount: Joi.when('type', {
+      is: 'tag',
+      then: Joi.required()
+    })
   }).options({ abortEarly: false });
   return schema.validate(data);
 };
@@ -28,14 +49,6 @@ export const signupValidation = (
   next();
 };
 
-const signinInputValidation = (data: IUser) => {
-  const schema = Joi.object({
-    email: Joi.string().required().email(),
-    password: Joi.string().required()
-  }).options({ abortEarly: false });
-  return schema.validate(data);
-};
-
 export const signinValidation = (
   req: Request,
   _: Response,
@@ -49,19 +62,6 @@ export const signinValidation = (
     next(new ExtendedError('Invalid properties', 500, formatedErrorObj));
   }
   next();
-};
-
-const createInstaItemValidation = (data: IUser) => {
-  const schema = Joi.object({
-    image: Joi.string().required(),
-    type: Joi.string().valid('user', 'tag').required(),
-    name: Joi.string().required(),
-    mediaCount: Joi.when('type', {
-      is: 'tag',
-      then: Joi.required()
-    })
-  }).options({ abortEarly: false });
-  return schema.validate(data);
 };
 
 export const instaItemValidation = (

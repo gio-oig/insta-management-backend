@@ -9,9 +9,7 @@ import {
 const httpGetAll = async (req: Request, res: Response) => {
   const items = await getAll();
 
-  res.status(200).json({
-    items
-  });
+  res.status(200).json({ items });
 };
 
 const httpCreateItem = async (req: Request, res: Response) => {

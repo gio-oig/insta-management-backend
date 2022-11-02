@@ -12,8 +12,8 @@ import {
 } from './instaItem.controller';
 
 instaItemRouter.get('/', httpGetAll);
-instaItemRouter.post('/create', authorize, instaItemValidation, httpCreateItem);
-instaItemRouter.put('/:itemId', httpUpdateItem);
-instaItemRouter.delete('/:itemId', httpDeleteItem);
+instaItemRouter.post('/', authorize, instaItemValidation, httpCreateItem);
+instaItemRouter.put('/:itemId', authorize, httpUpdateItem);
+instaItemRouter.delete('/:itemId', authorize, httpDeleteItem);
 
 export default instaItemRouter;

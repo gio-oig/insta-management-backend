@@ -20,4 +20,4 @@ const usersSchema = new Schema<IInstaItem>({
   mediaCount: Number
 });
 
-export default mongoose.model<IInstaItem>('IInstaItem', usersSchema);
+export default mongoose.model<IInstaItem>('InstaItem', usersSchema);

@@ -6,8 +6,7 @@ export default function getToken(tokenData: Record<string, string>) {
       ...tokenData,
       time: Date.now()
     },
-    process.env.SECRET || 'hello',
-    { expiresIn: '8h' }
+    process.env.SECRET || 'hello'
   );
 
   return token;
